@@ -1,0 +1,13 @@
+controller_list:
+  - name: Manipulator_controller
+    action_ns: follow_joint_trajectory
+    type: FollowJointTrajectory
+    default: True
+    joints:
+      - wam_joint_1
+      - wam_joint_2
+      - wam_joint_3
+      - wam_joint_4
+      - wam_joint_5
+      - wam_joint_6
+      - wam_joint_7

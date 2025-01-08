@@ -1,0 +1,21 @@
+controller_list:
+  - name: fake_Manipulator_controller
+    type: $(arg fake_execution_type)
+    joints:
+      - wam_joint_1
+      - wam_joint_2
+      - wam_joint_3
+      - wam_joint_4
+      - wam_joint_5
+      - wam_joint_6
+      - wam_joint_7
+  - name: fake_BHand_controller
+    type: $(arg fake_execution_type)
+    joints:
+      - bhand_finger3
+      - bhand_spread
+      - bhand_finger1
+      - bhand_finger2
+initial:  # Define initial robot poses per group
+  - group: Manipulator
+    pose: Zero

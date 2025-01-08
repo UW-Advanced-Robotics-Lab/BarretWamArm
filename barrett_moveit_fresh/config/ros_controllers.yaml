@@ -1,0 +1,46 @@
+Manipulator_controller:
+  type: effort_controllers/JointTrajectoryController
+  joints:
+    - wam_joint_1
+    - wam_joint_2
+    - wam_joint_3
+    - wam_joint_4
+    - wam_joint_5
+    - wam_joint_6
+    - wam_joint_7
+  gains:
+    wam_joint_1:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+    wam_joint_2:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+    wam_joint_3:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+    wam_joint_4:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+    wam_joint_5:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+    wam_joint_6:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+    wam_joint_7:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1

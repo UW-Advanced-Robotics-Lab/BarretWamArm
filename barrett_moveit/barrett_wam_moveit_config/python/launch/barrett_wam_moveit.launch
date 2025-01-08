@@ -1,7 +1,8 @@
 <launch>
-<!--     <param name="robot_description" textfile="$(find barrett_tf_publisher)/urdf/wam7_bhand.urdf"/> -->
+      <param name="robot_description" textfile="$(find barrett_tf_publisher)/urdf/wam7_bhand.urdf"/> 
+        <param name="robot_description_semantic" textfile="/home/corey/UWARL_catkin_ws/src/barrett-wam-arm/barrett_moveit/barrett_wam_moveit_config/config/wam7_hand.srdf"/>
    <!-- RVIZ -->
-<!--    <node type="rviz" name="rviz" pkg="rviz" args="-d $(find barrett_wam_moveit_config)/python/rviz/barrett_wam_moveit.rviz" /> -->
+    <node type="rviz" name="rviz" pkg="rviz" args="-d $(find barrett_wam_moveit_config)/python/rviz/barrett_wam_moveit.rviz" /> 
 
    <!-- moveit_to_densefusion_node -->
   <node name="barrett_wam_moveit" pkg="barrett_wam_moveit_config" type="barrett_wam_moveit_node.py" respawn="false" output="screen">
