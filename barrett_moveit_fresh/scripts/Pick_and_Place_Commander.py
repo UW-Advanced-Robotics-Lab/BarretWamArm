@@ -24,20 +24,6 @@ def call_empty_service(service_name):
         rospy.logerr(f"Service call to {service_name} failed: {e}")
 
 def move_cartesian_path(x, y, z, qx, qy, qz, qw):
-    moveit_commander.roscpp_initialize(sys.argv)
-    rospy.init_node("wam_cartesian_path", anonymous=True)
-
-    robot = moveit_commander.RobotCommander()
-    scene = moveit_commander.PlanningSceneInterface()
-    move_group = moveit_commander.MoveGroupCommander("Manipulator")
-
-    move_group.set_pose_reference_frame("wam_link_base")
-    end_effector_link = move_group.get_end_effector_link()
-    rospy.loginfo(f"End effector link: {end_effector_link}")
-    move_group.set_goal_tolerance(0.01)
-    move_group.set_goal_orientation_tolerance(0.05)
-    move_group.set_planning_time(20.0)  # Increase the planning time to 10 seconds
-    move_group.set_num_planning_attempts(100)  # Increase the number of planning attempts
 
 
 
@@ -56,6 +42,8 @@ def move_cartesian_path(x, y, z, qx, qy, qz, qw):
     (plan, fraction) = move_group.compute_cartesian_path(
         waypoints, 0.01, False
     )
+    
+
 
     if fraction == 1.0:
         rospy.loginfo("Successfully planned the Cartesian path.")
@@ -68,8 +56,22 @@ def move_cartesian_path(x, y, z, qx, qy, qz, qw):
         rospy.logwarn(
             "Could not compute a complete Cartesian path. Fraction achieved: %f", fraction
         )
+        
+    print("Tried Path Planning")
+    
+    move_group.set_pose_target(pose_goal)
+    
+    # Plan and execute
+    plan = move_group.plan()
+    if plan and not rospy.is_shutdown():
+        rospy.loginfo("Planning successful. Executing...")
+        
+        print(plan.trajectory)
+        
+    else:
+        rospy.logwarn("Failed to compute IK solution to reach target pose.")
 
-    moveit_commander.roscpp_shutdown()
+    
 
 def call_joint_move_service(joint_positions):
     rospy.loginfo("Calling /wam/joint_move service...")
@@ -102,6 +104,21 @@ def move_to_place():
 
 if __name__ == "__main__":
     try:
+        moveit_commander.roscpp_initialize(sys.argv)
+        rospy.init_node("wam_cartesian_path", anonymous=True)
+
+        robot = moveit_commander.RobotCommander()
+        scene = moveit_commander.PlanningSceneInterface()
+        move_group = moveit_commander.MoveGroupCommander("Manipulator")
+
+        move_group.set_pose_reference_frame("wam_link_base")
+        end_effector_link = move_group.get_end_effector_link()
+        rospy.loginfo(f"End effector link: {end_effector_link}")
+        move_group.set_goal_tolerance(0.10)
+        move_group.set_goal_orientation_tolerance(0.1)
+        move_group.set_planning_time(20.0)  # Increase the planning time to 10 seconds
+        move_group.set_num_planning_attempts(100)  # Increase the number of planning attempts
+        
         while not rospy.is_shutdown():
             user_input = input(
                 "Enter 'p' for Cartesian pose, 'j' for joint positions, 'h' to go home, 'pick', 'place', or 'q' to quit: "

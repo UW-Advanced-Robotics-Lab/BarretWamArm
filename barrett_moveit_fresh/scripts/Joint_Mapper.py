@@ -28,7 +28,7 @@ current_wam_state = JointState()
 current_bhand_state = JointState()
 
 # Publisher for remapped joint states
-pub = rospy.Publisher("/joint_states_remapped", JointState, queue_size=10)
+pub = rospy.Publisher("/joint_states", JointState, queue_size=10)
 
 # Remap and store WAM joint states
 def wam_joint_state_callback(msg):
