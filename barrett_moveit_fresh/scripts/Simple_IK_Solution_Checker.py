@@ -26,7 +26,7 @@ def move_cartesian_path(x, y, z, qx, qy, qz, qw):
     move_group = moveit_commander.MoveGroupCommander("Manipulator")
 
     # Set the reference frame for the target pose
-    move_group.set_pose_reference_frame("wam_link_base")
+    move_group.set_pose_reference_frame("wam_link_footprint")
     move_group.set_goal_tolerance(0.01)  # Position tolerance in meters
     move_group.set_goal_orientation_tolerance(0.05)  # Orientation tolerance in radians
 

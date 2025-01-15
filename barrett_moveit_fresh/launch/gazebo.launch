@@ -13,7 +13,7 @@
   </include>
 
   <!-- Set the robot urdf on the parameter server -->
-  <param name="robot_description" textfile="$(find barrett_moveit_fresh)/config/gazebo_wam.urdf" />
+  <param name="robot_description" textfile="$(find wam_description)/urdf/wam.urdf" />
 
   <!-- Unpause the simulation after loading the robot model -->
   <arg name="unpause" value="$(eval '' if arg('paused') else '-unpause')" />

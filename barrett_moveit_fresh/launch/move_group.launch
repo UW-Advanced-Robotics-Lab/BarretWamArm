@@ -102,4 +102,6 @@
     <param name="planning_scene_monitor/publish_transforms_updates" value="$(arg publish_monitored_planning_scene)" />
   </node>
 
+  <node name="joint_mapper" pkg="barrett_moveit_fresh" type="Joint_Mapper.py" output="screen" />
+
 </launch>

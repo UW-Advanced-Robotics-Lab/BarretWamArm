@@ -6,6 +6,12 @@ from geometry_msgs.msg import Pose
 from barrett_wam_msgs.srv import JointMove  # Correct service type import
 from std_srvs.srv import Empty  # For the go_home service
 import sys
+import copy
+import moveit_msgs.msg
+import geometry_msgs.msg
+from math import pi
+from std_msgs.msg import String
+from moveit_commander.conversions import pose_to_list
 
 def call_empty_service(service_name):
     rospy.loginfo(f"Calling {service_name} service...")
@@ -26,8 +32,8 @@ def call_empty_service(service_name):
 def move_cartesian_path(x, y, z, qx, qy, qz, qw):
     
     
-    print("Current Pose:", move_group.get_current_pose().pose)
-    
+    move_group.set_start_state_to_current_state()
+
     
 
 
@@ -44,6 +50,8 @@ def move_cartesian_path(x, y, z, qx, qy, qz, qw):
 
     waypoints.append(pose_goal)
     
+    move_group.set_pose_target(pose_goal)
+    
 
 
     (plan, fraction) = move_group.compute_cartesian_path(
@@ -52,17 +60,20 @@ def move_cartesian_path(x, y, z, qx, qy, qz, qw):
     
 
 
-    if fraction == 1.0:
-        rospy.loginfo("Successfully planned the Cartesian path.")
-        joint_trajectory = plan.joint_trajectory
-        final_joint_positions = joint_trajectory.points[-1].positions
-        rospy.loginfo("Calculated final joint positions (without execution):")
-        rospy.loginfo(final_joint_positions)
-        call_joint_move_service(final_joint_positions)
-    else:
-        rospy.logwarn(
-            "Could not compute a complete Cartesian path. Fraction achieved: %f", fraction
-        )
+    print("Fraction: ",fraction)
+    rospy.loginfo("Successfully planned the Cartesian path.")
+    joint_trajectory = plan.joint_trajectory
+    final_joint_positions = joint_trajectory.points[-1].positions
+    rospy.loginfo("Calculated final joint positions (without execution):")
+    rospy.loginfo(final_joint_positions)
+    call_joint_move_service(final_joint_positions)
+    
+    display_trajectory = moveit_msgs.msg.DisplayTrajectory()
+    display_trajectory.trajectory_start = robot.get_current_state()
+    display_trajectory.trajectory.append(plan)
+    # Publish
+    display_trajectory_publisher.publish(display_trajectory);
+
         
 
     
@@ -105,13 +116,17 @@ if __name__ == "__main__":
         scene = moveit_commander.PlanningSceneInterface()
         move_group = moveit_commander.MoveGroupCommander("Manipulator")
 
-        move_group.set_pose_reference_frame("uwarl_base_link")
+        move_group.set_pose_reference_frame("wam_link_footprint")
         end_effector_link = move_group.get_end_effector_link()
         rospy.loginfo(f"End effector link: {end_effector_link}")
         move_group.set_goal_tolerance(0.10)
         move_group.set_goal_orientation_tolerance(0.1)
         move_group.set_planning_time(20.0)  # Increase the planning time to 10 seconds
         move_group.set_num_planning_attempts(100)  # Increase the number of planning attempts
+        
+        display_trajectory_publisher = rospy.Publisher('/move_group/display_planned_path',
+                                               moveit_msgs.msg.DisplayTrajectory,
+                                               queue_size=20)
         
         while not rospy.is_shutdown():
             user_input = input(
