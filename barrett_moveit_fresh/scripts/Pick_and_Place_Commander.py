@@ -24,6 +24,11 @@ def call_empty_service(service_name):
         rospy.logerr(f"Service call to {service_name} failed: {e}")
 
 def move_cartesian_path(x, y, z, qx, qy, qz, qw):
+    
+    
+    print("Current Pose:", move_group.get_current_pose().pose)
+    
+    
 
 
 
@@ -38,6 +43,8 @@ def move_cartesian_path(x, y, z, qx, qy, qz, qw):
     pose_goal.orientation.w = qw
 
     waypoints.append(pose_goal)
+    
+
 
     (plan, fraction) = move_group.compute_cartesian_path(
         waypoints, 0.01, False
@@ -57,19 +64,6 @@ def move_cartesian_path(x, y, z, qx, qy, qz, qw):
             "Could not compute a complete Cartesian path. Fraction achieved: %f", fraction
         )
         
-    print("Tried Path Planning")
-    
-    move_group.set_pose_target(pose_goal)
-    
-    # Plan and execute
-    plan = move_group.plan()
-    if plan and not rospy.is_shutdown():
-        rospy.loginfo("Planning successful. Executing...")
-        
-        print(plan.trajectory)
-        
-    else:
-        rospy.logwarn("Failed to compute IK solution to reach target pose.")
 
     
 
@@ -111,7 +105,7 @@ if __name__ == "__main__":
         scene = moveit_commander.PlanningSceneInterface()
         move_group = moveit_commander.MoveGroupCommander("Manipulator")
 
-        move_group.set_pose_reference_frame("wam_link_base")
+        move_group.set_pose_reference_frame("uwarl_base_link")
         end_effector_link = move_group.get_end_effector_link()
         rospy.loginfo(f"End effector link: {end_effector_link}")
         move_group.set_goal_tolerance(0.10)
