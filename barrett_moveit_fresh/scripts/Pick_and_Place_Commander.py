@@ -61,18 +61,20 @@ def move_cartesian_path(x, y, z, qx, qy, qz, qw):
 
 
     print("Fraction: ",fraction)
-    rospy.loginfo("Successfully planned the Cartesian path.")
-    joint_trajectory = plan.joint_trajectory
-    final_joint_positions = joint_trajectory.points[-1].positions
-    rospy.loginfo("Calculated final joint positions (without execution):")
-    rospy.loginfo(final_joint_positions)
-    call_joint_move_service(final_joint_positions)
+    
+    if fraction > 0.95:
+        rospy.loginfo("Successfully planned the Cartesian path.")
+        joint_trajectory = plan.joint_trajectory
+        final_joint_positions = joint_trajectory.points[-1].positions
+        rospy.loginfo("Calculated final joint positions (without execution):")
+        rospy.loginfo(final_joint_positions)
+        call_joint_move_service(final_joint_positions)
     
     display_trajectory = moveit_msgs.msg.DisplayTrajectory()
     display_trajectory.trajectory_start = robot.get_current_state()
     display_trajectory.trajectory.append(plan)
     # Publish
-    display_trajectory_publisher.publish(display_trajectory);
+    display_trajectory_publisher.publish(display_trajectory)
 
         
 
