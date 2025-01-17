@@ -83,9 +83,20 @@ def move_to_pick():
     pick_positions = [0, 0.6909, 0, 1.3406, 0, 1.1206, 0]
     move_to_joint_positions(pick_positions)
 
+def move_to_pick2():
+    rospy.loginfo("Moving to 'pick' position...")
+    pick_positions = [0.00770642729152072, 0.5621428710295964, 0.004971719719292722, 1.19011342793461, 0.004111701080930619, 1.404462203836328, 0.012329383425738577]
+    move_to_joint_positions(pick_positions)
+
+
 def move_to_place():
     rospy.loginfo("Moving to 'place' position...")
-    place_positions = [0, -0.857, 0, -0.9, 0, -1.349, 0]
+    place_positions = [2.5392860542321234, 1.018047391209697, 1.106960237316661, 0.9197067034923244, -0.9086859388856592, 1.4395698053735044, 0.3361811880751386]
+    move_to_joint_positions(place_positions)
+    
+def move_to_place2():
+    rospy.loginfo("Moving to 'place' position...")
+    place_positions = [2.5937423722020636, 0.9881008282178765, 1.1181352036581906, 1.044214810775709, -0.9086859388856593, 1.3676150364572193, 0.5066349139359744]
     move_to_joint_positions(place_positions)
 
 def wait_for_aruco_pose():
@@ -167,7 +178,13 @@ if __name__ == "__main__":
                 break
 
             try:
-                if user_input.strip() == "pick":
+                if user_input.strip() == "pick2":
+                    move_to_pick2()
+
+                elif user_input.strip() == "place2":
+                    move_to_place2()
+
+                elif user_input.strip() == "pick":
                     move_to_pick()
 
                 elif user_input.strip() == "place":
@@ -215,6 +232,13 @@ if __name__ == "__main__":
 
                 elif user_input.strip() == "find":
                     find_and_move()
+                
+                elif user_input.strip() == "c":
+                    # Get the current pose
+                    current_pose = move_group.get_current_pose(end_effector_link).pose
+                    rospy.loginfo("Current Cartesian Pose:")
+                    rospy.loginfo(f"Position: x={current_pose.position.x}, y={current_pose.position.y}, z={current_pose.position.z}")
+                    rospy.loginfo(f"Orientation: x={current_pose.orientation.x}, y={current_pose.orientation.y}, z={current_pose.orientation.z}, w={current_pose.orientation.w}")
 
                 else:
                     rospy.logwarn("Invalid input. Try again.")

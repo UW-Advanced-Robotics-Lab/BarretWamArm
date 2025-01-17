@@ -105,7 +105,7 @@ def move_to_pick():
 def move_to_place():
     """Move the WAM arm to the 'place' position."""
     rospy.loginfo("Moving to 'place' position...")
-    place_positions = [0, -0.857, 0, -0.9, 0, -1.349, 0]
+    place_positions = [2.6, 0.992, 1.09, 0.73, -0.878, 1.591, 0.244]
     move_to_joint_positions(place_positions)
 
 if __name__ == "__main__":
