@@ -2,9 +2,8 @@
 
 import rospy
 from geometry_msgs.msg import PoseStamped
-import math
 
-def publish_goal(x, y, angle):
+def publish_goal(x, y, quat_z, quat_w):
     # Initialize the ROS node
     rospy.init_node('goal_publisher', anonymous=True)
     pub = rospy.Publisher('/uwarl/move_base_simple/goal', PoseStamped, queue_size=10)
@@ -22,14 +21,14 @@ def publish_goal(x, y, angle):
     goal_msg.pose.position.y = y
     goal_msg.pose.position.z = 0.0  # Assuming 2D movement
     
-    # Convert angle to quaternion
+    # Set orientation (quaternion)
     goal_msg.pose.orientation.x = 0.0
     goal_msg.pose.orientation.y = 0.0
-    goal_msg.pose.orientation.z = math.sin(angle / 2.0)
-    goal_msg.pose.orientation.w = math.cos(angle / 2.0)
+    goal_msg.pose.orientation.z = quat_z
+    goal_msg.pose.orientation.w = quat_w
     
     # Publish the message
-    rospy.loginfo("Publishing goal: x={}, y={}, angle={} (radians)".format(x, y, angle))
+    rospy.loginfo("Publishing goal: x={}, y={}, quat_z={}, quat_w={}".format(x, y, quat_z, quat_w))
 
     pub.publish(goal_msg)
 
@@ -38,8 +37,9 @@ if __name__ == "__main__":
         # Get inputs from the user
         x = float(input("Enter x position: "))
         y = float(input("Enter y position: "))
-        angle = float(input("Enter angle (in radians): "))
+        quat_z = float(input("Enter quaternion z: "))
+        quat_w = float(input("Enter quaternion w: "))
         
-        publish_goal(x, y, angle)
+        publish_goal(x, y, quat_z, quat_w)
     except rospy.ROSInterruptException:
         pass
